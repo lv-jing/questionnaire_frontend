@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script>
+        !function(){function a(){document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+"px"}var b=null;window.addEventListener("resize",function(){clearTimeout(b),b=setTimeout(a,10)},!1),a()}(window);
+    </script>
+    <title>我的账户</title>
+    <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/css/common.css'}">
+    <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/css/member_center2.css'}">   
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c32d8676d6a87013943a439d7005ca4c";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <style>
+        /*弹窗*/
+        .xh_blackbg{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,.7);
+        }
+        .xh_pop{
+            margin:auto;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 4.2rem;
+            height: 6.8rem;
+            border: 1px solid #ffe59a;
+            border-radius: .1rem;
+            overflow: hidden;
+        }
+        .xh_poptop{
+            position: relative;
+            padding-top: 1px;
+            width: 100%;
+            height: 6.15rem;
+            background: #fff;
+        }
+
+        .xh_poptop_h1{
+            margin-top: .24rem;
+            font-size: .2rem;
+            line-height: .32rem;
+            text-align: center;
+            color: #53261b;
+            font-weight: bold;
+        }
+        .xh_popbtm{
+            height: .65rem;
+            display: -webkit-flex;
+            -webkit-justify-content: space-between;
+        }
+        .xh_popbtm div{
+            width: 50%;
+            font-size: .2rem;
+            line-height: .65rem;
+            text-align: center;
+        }
+        .xh_popbtm div:nth-child(1){
+            background:linear-gradient(to right, #ffe598, #d6ab58);
+            color: #53261b;
+        }
+        .xh_popbtm div:nth-child(2){
+            background: #53261b;
+            color: #ffe59a;
+        }
+        .xh_rules{
+            margin-top: .2rem;
+            padding: 0 .2rem;
+            height: 4.9rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .xh_rules_title{
+            margin-top: .2rem;
+            display: -webkit-flex;
+            height: .26rem;
+        }
+        .xh_rules_title img{
+            width: .26rem;
+            height: .26rem;
+        }
+        .xh_rules_title p{
+            margin-left: .085rem;
+            font-size: .16rem;
+            line-height: .28rem;
+            color: #53261b;
+            font-weight: bold;
+        }
+        .xh_rules_text{
+            margin-top:.1rem;
+            margin-left: .35rem;
+            width: 3.25rem;
+            display: -webkit-flex;
+        }
+        .xh_rules_text p,.xh_rules_text span{
+            font-size: .16rem;
+            line-height: .28rem;
+            color: #53261b;
+            font-weight: bold;
+        }
+        .xh_progress{
+            top: 1rem;
+            right: .2rem;
+            position: absolute;
+            width: 3px;
+            height: 4.9rem;
+            background: #d8ac59;
+            overflow: hidden;
+        }
+        .xh_progress_div{
+            width: 3px;
+            height: .3rem;
+            background: #53261b
+        }
+    </style>
+</head>
+<body style="background-color: #3E3022">
+<!-- theme_1类为白金会员主题样式，theme_2类为经典会员主题样式，theme_3类为金卡会员主题样式 -->
+<div th:class="n-container" th:classappend="${member.level=='v1' ? 'theme_2' : member.level=='v3' ? 'theme_1' : (member.level=='v2' || member.level=='v2_2') ? 'theme_3' : ''}" >
+    <div class="n-top">
+        <p class="n-time clear">
+            <span class="pull-right"><i><img th:src="@{${uiPath} + '/assets/godiva/images/member/star.png'}" alt=""></i>会员等级有效期：[[${member.endTime != null && not #strings.isEmpty(member.endTime) ? #dates.format(member.endTime, 'yyyy-MM-dd') : ''}]]</span>
+        </p>
+    </div>
+
+    <div class="n-content">
+        <div class="n-card" id="card">
+            <!-- 卡正面 -->
+            <div class="card-front j-rotate">
+                <i class="card-rotate "></i>
+                <p class="card-user">[[${member.name}]]</p>
+                <p class="card-name">[[${member.levelName}]]</p>
+            </div>
+            <!-- 卡背面 -->
+            <div class="card-back j-rotate" hidden="hidden">
+                <i class="card-rotate "></i>
+                <ul th:if="${member.level=='v1'}">
+                    <li>享1倍积分</li>
+                </ul>
+                <ul th:if="${member.level=='v2' || member.level=='v2_2'}">
+                    <li>购买正价产品可享9折</li>
+                    <li>生日月份获生日礼物一份</li>
+                    <li>生日月购买正价产品可享8折一次</li>
+                    <li>1.5倍积分</li>
+                </ul>
+                <ul th:if="${member.level=='v3'}">
+                    <li>购买正价产品可享8折</li>
+                    <li>生日月份获生日礼物一份</li>
+                    <li>2倍积分</li>
+                    <li>白金卡礼篮</li>
+                </ul>
+                <!-- 条形码图片 -->
+                <img id="barcode" class="card-code" alt="">
+            </div>
+        </div>
+
+        <div class="n-account">
+            <div class="card-type">
+                <span class="pull-left" th:classappend="${member.level=='v1' ? 'card-current' : ''}">经典卡 Classic</span>
+                <span class="" th:classappend="${member.level=='v2' || member.level=='v2_2' ? 'card-current' : ''}">金卡 Gold</span>
+                <span class="pull-right" th:classappend="${member.level=='v3' ? 'card-current' : ''}">白金卡 Platinum</span>
+            </div>
+            <div class="card-progress">
+                <!-- card-progress-bar宽度表示积分进度 -->
+                <div class="card-progress-bar" >
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/member/card1/dot.png'}" alt="">
+                </div>
+            </div>
+            <p class="card-integral">[[${member.source}]] 可用积分 </p>
+        </div>
+
+        <ul class="n-menu clear">
+            <li class="border-right border-bottom">
+                <a th:href="${'/scrm/toMemberPage?phone=' + member.username}" class="icon1"></a>
+                <p>个人信息</p>
+            </li>
+            <li class="border-right border-bottom">
+                <a th:href="${'/mobile/web/member/coupon?type=2&miniprogram=true&phone=' + member.username}" class="icon2"></a>
+                <p>我的票券</p>
+            </li>
+            <li class="border-bottom">
+                <a th:href="${'/mobile/web/member/source?miniprogram=true&phone=' + member.username}" class="icon2"></a>
+                <p>积分管理</p>
+            </li>
+            <li class="border-right">
+                <a th:href="${'/mobile/web/shop/index?miniprogram=true&phone=' + member.username}" class="icon2"></a>
+                <p>积分商城</p>
+            </li>
+            <li class="border-right">
+                <a th:href="${'/mobile/web/member/award?miniprogram=true&phone=' + member.username}" class="icon2"></a>
+                <p>额外奖励</p>
+            </li>
+            <li>
+                <a th:href="${'/mobile/web/member/rule?miniprogram=true&type=' + member.level + '&phone=' + member.username}" class="icon6"></a>
+                <p>会员权益</p>
+            </li>
+        </ul>
+
+        <div class="n-bottom">
+            <p>*&nbsp;&nbsp;&nbsp;查看更多规则请点击&nbsp;&nbsp;<a href="javascript:;" onclick="$('.xh_blackbg').show()">章程</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- 弹窗 -->
+<div class="xh_blackbg" hidden="hidden">
+    <div class="xh_pop">
+        <div class="xh_poptop">
+            <p class="xh_poptop_h1">- &nbspGodiva会员积分使用细则&nbsp&nbsp -</p>
+            <!-- 1 -->
+            <div class="xh_rules">
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/1.png'}">
+                    <p>会员积分使用内容</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>1、</p><span>积分可兑换产品、礼品、代金券、活动入场券等，积分兑换礼品不开票。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>2、</p><span>会员折扣与会员积分，不与其他折扣类优惠、部分活动类和支付类优惠同享，具体</br>参照折扣类、活动类、支付类优惠信息。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>3、</p><span>兑换礼品品种以各活动介绍或海报公示为准，领取积分兑换礼品后非质量问题不再进行退换。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>4、</p><span>积分不得提现，不可转让。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>5、</p><span>请在交易时告知会员信息进行积分。由于会员原因未能积分的，不补记积分。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>6、</p><span>积分不具有现金价值，无论您通过何种方式获得积分，您都不得使用积分换取任何现金或金钱。</span>
+                </div>
+                <!-- 2 -->
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/2.png'}">
+                    <p>会员积分计算方法</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>会员积分以实际支付金额（扣除代金券，商品券，积分抵用，银行满减等非实际支付部分。另行说明的不参与积分的交易也应当扣除）计算，满人民币1元可获得积分1分，经典卡1倍积分，金卡1.5倍积分，白金卡2倍积分。</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>1、</p><span>积分计算以实际支付金额为准；</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>2、</p><span>会员消费金额中，不满1元部分以1元计入积分；</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>3、</p><span>会员消费积分在消费达成<strong>第二天</strong>记入积分（即累计积分)； </span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>4、</p><span>如发生退换货，将从积分中扣除退换货部分对应的积分；</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>5、</p><span>积分只在同一会员帐户内累计，不同帐户的积分不能合并。</span>
+                </div>
+                <!-- 3 -->
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/3.png'}">
+                    <p>会员积分有效期</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>积分实行一年滚动到期政策，每年6月30日清零之前一年的积分，逾期自动失效。（例如，截至2018年底前产生的积分有效期至2019年6月30日，如前一年积分未全部使用，则会于6月30日清空该部分积分。）</p>
+                </div>
+                <!-- 4 -->
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/4.png'}">
+                    <p>会员积分查询：</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>1、</p><span>每位会员在您自己账户中的“我的积分”中可查询到您的积分详细情况。 </span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>2、</p><span>购物交易完成后您的积分账户中系统在消费达成当天将自动生成积分。</span>
+                </div>
+                <!-- 5 -->
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/5.png'}">
+                    <p>会员积分兑换</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>累积到特定数量的积分后，您可以在微信公众账号里或者http://www.godiva.cn/官网参与积分相关各类活动。详见具体活动的详情说明。</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>1、</p><span>兑换成功后将从会员帐户中扣减相应积分分值； </span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>2、</p><span>积分兑换活动产品、礼品、折扣券、抽奖、其他优惠会定期更新，兑换活动均有有效期限，逾期不予兑换活动产品、礼品、折扣券、抽奖、其他优惠；</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>3、</p><span>每次兑换活动数量有限，先兑先得，兑完为止；</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>4、</p><span>参与积分兑换活动和使用所兑换的奖品权益均需本人完成。</span>
+                </div>
+                <div class="xh_rules_text">
+                    <p>5、</p><span>积分兑换非质量问题不提供更换或退货服务，所以请您细心看准后再进行兑换； </span>
+                </div>
+                <!-- 6 -->
+                <div class="xh_rules_title">
+                    <img th:src="@{${uiPath} + '/assets/godiva/images/rules/6.png'}">
+                    <p>会员积分其他事项</p>
+                </div>
+                <div class="xh_rules_text">
+                    <p>符合条件未获得积分的处理方式：如您在订单符合要求的情况下未自动获得积分，请您拨打400-878-1926顾客关怀热线，在核实了您的订单信息及个人信息后，我们将为您补计积分，敬请见谅。</p>
+                </div>
+
+            </div>
+            <!-- proess -->
+            <div class="xh_progress">
+                <div class="xh_progress_div"></div>
+            </div>
+        </div>
+        <div class="xh_popbtm">
+            <div onclick="$('.xh_blackbg').hide()">好的</div>
+            <div onclick="$('.xh_blackbg').hide()">返回</div>
+        </div>
+    </div>
+</div>
+
+
+
+<script th:src="@{${uiPath} + '/assets/godiva/lib/jquery.min.js'}"></script>
+<script th:src="@{${uiPath} + '/assets/godiva/lib/jquery.flip.min.js'}"></script>
+<script type="text/javascript" th:src="@{${uiPath} + '/assets/js/JsBarcode.all.min.js'}"></script>
+<script>
+    $(function(){
+        //获取当前参数，弹出会员规则
+        if(getQueryString("rule")!=null){
+            $('.xh_blackbg').show();
+        }
+        var height = $(".xh_progress_div").height();
+        $(".xh_rules").scroll(function() {
+            // console.log($(".op_content").scrollTop());
+            var k = .3;         //增加比例系数
+            var top = $(".xh_rules").scrollTop()*k
+            $(".xh_progress_div").css("height",top+height)
+        });
+
+
+        //initPbar('${member.level}',${member.source});
+        if (member.no) {
+          JsBarcode("#barcode", member.no, {
+            height: 50,
+            width:4,
+            background: "transparent",
+            fontSize: 30
+          });
+        }
+        $('.card-back').show();
+        $("#card").flip({
+            axis: 'y',
+            reverse: false,
+            speed: '250',
+            trigger: 'manual',
+            front: $('.card-front'),
+            back: $('.card-back'),
+            autoSize: false
+        });
+        $(".j-rotate").click(function () {
+            $("#card").flip('toggle');
+        });
+        if($('.n-container').hasClass("theme_2")){
+            $(".card-progress-bar").css("width","14%")
+        }else if($('.n-container').hasClass("theme_3")){
+            $(".card-progress-bar").css("width","50%")
+        }else{
+            $(".card-progress-bar").css("width","86%")
+        }
+    })
+    function initPbar(level,source){
+        if(level=='v1'){
+            if(source<100){
+                $(".card-progress-bar").width('10%');
+            }else if(source<1000){
+                $(".card-progress-bar").width('25%');
+            }else if(source<10000){
+                $(".card-progress-bar").width('40%');
+            }
+        }else if(level=='v2' || level=='v2_2'){
+            if(source<1000){
+                $(".card-progress-bar").width('60%');
+            }else if(source<10000){
+                $(".card-progress-bar").width('75%');
+            }else if(source<100000){
+                $(".card-progress-bar").width('90%');
+            }
+        }else if(level=='v3'){
+            $(".card-progress-bar").width('100%');
+        }
+    }
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+</script>
+<script type="text/jscript" th:inline="javascript">
+  var member = /*[[${member}]]*/
+  </script>
+</body>
+</html>

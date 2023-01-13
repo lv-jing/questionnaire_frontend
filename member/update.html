@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>个人信息</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <script>
+    !function () { function a() { document.documentElement.style.fontSize = document.documentElement.clientWidth / 6.4 + "px" } var b = null; window.addEventListener("resize", function () { clearTimeout(b), b = setTimeout(a, 10) }, !1), a() }(window);
+  </script>
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c32d8676d6a87013943a439d7005ca4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/css/common.css'}">
+  <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/lib/mui/mui.min.css'}">
+  <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/lib/mui/mui.picker.min.css'}">
+  <link rel="stylesheet" th:href="@{${uiPath} + '/assets/godiva/css/personal_information.css?id=3'}">
+  <link rel="stylesheet" th:href="@{${uiPath} + '/assets/layer_mobile/need/layer.css'}">
+  <style>
+    .xh_pop {
+      top: 1rem;
+    }
+
+    .xh_poptop ul li:nth-child(1),
+    .xh_poptop ul li:nth-child(3) {
+      margin-right: .25rem;
+    }
+
+    .xh_poptop ul li:nth-child(5),
+    .xh_poptop ul li:nth-child(7) {
+      margin-right: .25rem;
+    }
+
+    .xh_poptop ul li:nth-child(9),
+    .xh_poptop ul li:nth-child(11) {
+      margin-right: .25rem;
+    }
+
+    .xh_poptop ul li:nth-child(13),
+    .xh_poptop ul li:nth-child(15) {
+      margin-right: .25rem;
+    }
+
+    .xh_poptop ul li:nth-child(16) {
+      width: 100%;
+    }
+
+    .ui-mask-translusent {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #000;
+      z-index: 9000;
+      opacity: 0.7;
+    }
+    .ui-mask-translusent.transparent{
+      background: transparent;
+    }
+
+    .loading {
+      width: 150px;
+      height: 15px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    .loading span {
+      display: inline-block;
+      width: 15px;
+      height: 100%;
+      margin-right: 5px;
+      border-radius: 50%;
+      background: #f2d888;
+      -webkit-animation: load 1.04s ease infinite;
+    }
+
+    .loading span:last-child {
+      margin-right: 0px;
+    }
+
+    @-webkit-keyframes load {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .loading span:nth-child(1) {
+      -webkit-animation-delay: 0.13s;
+    }
+
+    .loading span:nth-child(2) {
+      -webkit-animation-delay: 0.26s;
+    }
+
+    .loading span:nth-child(3) {
+      -webkit-animation-delay: 0.39s;
+    }
+
+    .loading span:nth-child(4) {
+      -webkit-animation-delay: 0.52s;
+    }
+
+    .loading span:nth-child(5) {
+      -webkit-animation-delay: 0.65s;
+    }
+    .ui-toast {
+      position: fixed;
+      color: #fff;
+      z-index: 9999;
+      top: 50%;
+      margin: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: rgba(0, 0, 0, .7);
+      border-radius: .1rem;
+      padding: .2rem;      
+    }
+  </style>
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?726e69f5121cc5abd9287d3d64f2aa6a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="xh_main">
+    <!-- 头部 -->
+    <div class="xh_top">
+      <div class="xh_top_head">
+        <img th:src="${#strings.isEmpty(member.headurl) && member.headurl != null ? uiPath + '/assets/godiva/images/member/c_good.png' : member.headurl}">
+        </div>
+        <p>[[${#strings.isEmpty(member.nickname) ? 'Godiva' : member.nickname}]]</p>
+    </div>
+    <!-- 详细信息 -->
+    <div class="xh_message">
+        <!-- 地址 -->
+        <div class="xh_address">
+            <!--<img src="${base!}/assets/godiva/images/member/p_icon1.png">
+            <p class="xh_address_msg"></p>-->
+        </div>
+        <!-- 个人信息 -->
+        <ul class="xh_personal">
+            <li>
+                <p>姓名</p><input id="name" type="text" th:value="${member.name}">
+            </li>
+            <li>
+                <p>性别</p>              
+                <select class="xh_sex" id="sex">
+                    <option value="2" th:selected="${member.sex=='2'}"> 女士 </option>
+
+                    <option value="1" th:selected="${member.sex=='1'}"> 男士 </option>
+                </select>
+            </li>
+            <li><p>生日</p><span class="xh_brithday" style="min-width: 1rem;">[[${member.birthday}]]&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+            <li><p>手机号码</p><span>[[${member.username}]]</span><img class="xh_iconLock" th:src="@{${uiPath} + '/assets/godiva/images/icon_lock.png'}"></li>
+            <li><p>所在地址</p><span id="showCityPicker3">[[${member.province}]][[${member.city}]][[${member.district}]]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+            <input type="hidden" id="birthday" th:value="${member.birthday}"/>
+            <input type="hidden" id="province" th:value="${member.province}"/>
+            <input type="hidden" id="city" th:value="${member.city}"/>
+            <input type="hidden" id="district" th:value="${member.district}"/>
+
+        </ul>
+        <!-- 兴趣 Interest -->
+        <ul class="xh_interest">
+            <li>
+                <p>接受信息的渠道</p>
+                <span class="xh_interest_text">[[${member.append1}]]</span>
+                <img onclick="show(0)" th:src="@{${uiPath} + '/assets/godiva/images/member/p_icon2.png'}">
+            </li>
+            <li>
+                <p>感兴趣的产品</p>
+                <span class="xh_interest_text">[[${member.append2}]]</span>
+                <img onclick="show(1)" th:src="@{${uiPath} + '/assets/godiva/images/member/p_icon2.png'}">
+            </li>
+            <li>
+                <p>感兴趣的活动</p>
+                <span class="xh_interest_text">[[${member.append3}]]</span>
+                <img onclick="show(2)" th:src="@{${uiPath} + '/assets/godiva/images/member/p_icon2.png'}">
+            </li>
+        </ul>
+
+        <div class="xh_btn" onclick="doSubmit()">确认</div>
+    </div>
+    <div id="container" style="display: none;"></div>
+    <!-- 弹窗 -->
+    <div class="xh_blackbg" hidden="hidden">
+        <div class="xh_pop">
+            <div class="xh_poptop">
+                <p id="show_title">- 您会对GODIVA哪些活动感兴趣 -</p>
+                <ul id="show_content">
+                    <li class="xh_poplist" onclick="checklist(this)">折扣促销</li>
+                    <li class="xh_poplist" onclick="checklist(this)">季节限定</li>
+                    <li class="xh_poplist" onclick="checklist(this)">私人定制</li>
+                    <li class="xh_poplist" onclick="checklist(this)">线下活动</li>
+                    <li class="xh_poplist" onclick="checklist(this)">巧克力课程</li>
+                </ul>
+            </div>
+            <div class="xh_popbtm">
+                <div onclick="gettext()">好的</div>
+                <div onclick="hide()">返回</div>
+            </div>
+        </div>
+    </div>
+    <!-- loading -->
+    <div id="J_maskTranslusent" class="ui-mask-translusent" hidden="hidden"></div>    
+    <div id="J_loading" class="loading" hidden="hidden">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div id="J_toast" class="ui-toast" hidden="hidden">恭喜您注册成功，<br>将获得一次抽奖机会</div> 
+</div>
+
+<script type="text/javascript" th:src="@{${uiPath} + '/assets/godiva/lib/jquery.min.js'}"></script>
+<script type="text/javascript" th:src="@{${uiPath} + '/assets/godiva/lib/mui/mui.min.js'}"></script>
+<script th:src="@{${uiPath} + '/assets/godiva/lib/mui/mui.picker.min.js'}"></script>
+<script th:src="@{${uiPath} + '/assets/godiva/lib/mui/city.data-3.js'}"></script>
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=wSNNoO1W6p9bnFQI2ahHGymz0teyCIWr"></script>-->
+<script type="text/javascript" th:src="@{${uiPath} + '/assets/layer_mobile/layer.js'}"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script type="text/jscript" th:inline="javascript">
+  var member = /*[[${member}]]*/
+</script>
+<script>
+  var text = "";
+  var index;
+  var jq = $.noConflict();
+
+  var title = ["- 您愿意接受Godiva信息的渠道 -", "- 您会对GODIVA哪些产品感兴趣 -", "- 您会对GODIVA哪些活动感兴趣 -"];
+  var content = new Array();
+  content[0] = ["微信", "短信", "邮件", "邮寄"];
+  content[1] = ["金装巧克力礼盒", "松露形巧克力", "片装巧克力", "散装巧克力", "优选礼盒", "软冰淇淋", "限量季节新品", "热巧克力", "饼干/夹心糕点", "杯装冰淇淋/雪泥", "冰莹", "蛋糕", "咖啡", "巧克力条", "随享巧克力系列", "鲜制巧克力水果/干果"];
+  content[2] = ["巧克力学堂", "新品品鉴", "品牌活动", "私人定制"];
+  var check_content = new Array();
+  check_content[0] = member.append1 || ''
+  check_content[1] = member.append2 || ''
+  check_content[2] = member.append3 || ''
+
+  function checklist(obj) {
+    if (jq(obj).hasClass("xh_active")) {
+      jq(obj).removeClass("xh_active")
+    } else {
+      jq(obj).addClass("xh_active")
+    }
+  }
+
+  function show(num) {
+    jq(".xh_blackbg").show();
+    jq("#show_title").html(title[num]);
+    var html = "";
+    for (var i = 0; i < content[num].length; i++) {
+      if (check_content[num] != "" && check_content[num].search(content[num][i]) > -1) {
+        html += "<li class=\"xh_poplist xh_active\" onclick=\"checklist(this)\">" + content[num][i] + "</li>";
+      } else {
+        html += "<li class=\"xh_poplist\" onclick=\"checklist(this)\">" + content[num][i] + "</li>";
+      }
+    }
+    jq("#show_content").html(html);
+    index = num;
+  }
+
+  function hide(num) {
+    jq(".xh_blackbg").hide();
+  }
+
+  function gettext() {
+    text = "";
+    jq(".xh_poplist").each(function (i, a) {
+      if (jq(this).hasClass("xh_active")) {
+        if (text) {
+          text = text + "、" + jq(this).text();
+        } else {
+          text = text + "" + jq(this).text();
+        }
+      }
+    });
+    check_content[index] = text;
+    jq(".xh_interest_text").eq(index).text(text);
+    hide();
+  }
+  var needBackToMiniPro = getUrlParam('needBackToMiniPro');
+  function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+    if (r != null) return unescape(r[2]);
+    return null; //返回参数值
+  }
+
+  function gotoMiniProLottery() {
+    //判断当前页面是否在小程序环境中， 注：首页是在小程序，嵌套网页，该网页才能再次跳转回小程序
+    wx.miniProgram.getEnv(function (res) {
+      console.log(res.miniprogram) // true
+      //小程序环境
+      if (res.miniprogram) {
+        wx.miniProgram.redirectTo({
+          url: '/pages/lottery/lottery', //跳转回小程序的页面,传参id, 小程序onLoad函数接收参数即可
+          success: function () {
+            console.log('success')
+          },
+          fail: function () {
+            console.log('跳转回小程序的页面fail');
+          }
+        });
+      }
+    });
+  }
+
+  function handleResult(result) {
+    jq("#J_maskTranslusent, #J_loading").hide();
+    if (result.code == 1) {
+      if (needBackToMiniPro) {
+        var duration = 2000;
+        jq("#J_maskTranslusent, #J_toast").show().addClass('transparent');
+        setTimeout(function () {
+          jq("#J_maskTranslusent, #J_toast").hide().removeClass('transparent');
+          gotoMiniProLottery();
+        }, duration)
+      } else {
+        layer.open({
+          content: '更新成功!'
+          , btn: '好的'
+        });                 
+      }                
+    } else {
+      layer.open({
+        content: result && result.msg || '更新失败!'
+        , btn: '好的'
+      });
+    }
+  }
+
+  function doSubmit() {
+    jq("#J_maskTranslusent, #J_loading").show();
+    var v1 = jq("#name").val();
+    var v2 = jq("#sex").val();
+    var v3 = jq(".xh_brithday").html();
+    var birthday_old = member.birthday;
+    v3 = v3.replace(/&nbsp;/ig, '');
+    var v4 = jq("#province").val();
+    var v5 = jq("#city").val();
+    var v6 = jq("#district").val();
+    var params = {
+      username: member.username,
+      openid: member.openid,
+      name: v1, 
+      sex: v2,
+      birthday: v3,
+      province: v4,
+      city: v5,
+      district: v6,
+      append1: check_content[0],
+      append2: check_content[1],
+      append3: check_content[2]      
+    };
+    if (v3 != birthday_old && (birthday_old == '1900-01-01' || birthday_old == '1990-01-01' || birthday_old == '')) {
+      layer.open({
+        content: '亲爱的会员，是否修改您的生日，请确认。<br>*每位会员只有一次更新生日资料的机会。'
+        , btn: ['确认修改', '再想一下']
+        , yes: function (index) {
+          jq.ajax({
+            url: "/scrm/updateMember",
+            type: 'post',
+            data: JSON.stringify(params),
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            success: function (result) {
+              handleResult(result)
+            }
+          })
+          layer.close(index);
+        }
+        ,no: function (index) {
+          jq("#J_maskTranslusent, #J_loading").hide();
+        }
+      });
+    } else {
+      jq.ajax({
+        url: "/scrm/updateMember",
+        type: 'post',
+        data: JSON.stringify(params),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        success: function (result) {
+          handleResult(result)
+        }
+      })
+    }
+  }
+</script>
+<script type="text/javascript">
+  // 生日选择器
+  (function ($) {
+    $.init();
+    var result = $('.xh_brithday')[0];
+    var btn = $('.xh_brithday');
+
+    var birthday = member.birthday;
+    var g_month = '';
+    var g_day = '';
+    var g_year = '';
+    if (birthday != '') {
+      var bb = birthday.split("-");
+      g_year = bb[0];
+      g_month = bb[1];
+      g_day = bb[2];
+    }
+    //普通示例
+    var userPicker = new $.PopPicker();
+    var years = [];
+
+    for (var i = 0; i < 119; i++) {
+      var yearsb = {
+        value: 1930 + i,
+        text: 1930 + i
+      }
+      years.push(yearsb)
+    }
+    userPicker.setData(years);
+    userPicker.pickers[0].setSelectedValue(g_year);
+    if (birthday == '' || birthday == '1900-01-01' || birthday == '1990-01-01') {
+      btn[0].addEventListener('tap', function () {
+        var _self = this;
+        var optionsJson = this.getAttribute('data-options') || '{"value":"' + birthday + '","type":"date","beginYear":1930,"endYear":2012}';
+        var options = JSON.parse(optionsJson);
+        var id = this.getAttribute('id');
+        _self.picker = new $.DtPicker(options);
+        _self.picker.show(function (rs) {
+          result.innerText = rs.text;
+          console.log(rs.text);
+          birthday = rs.text;
+          _self.picker.dispose();
+          _self.picker = null;
+        });
+      }, false);
+    } else {
+      btn[0].addEventListener('tap', function (event) {
+        userPicker.show(function (items) {
+          result.innerText = _getParam(items[0], 'text') + '-' + g_month + '-' + g_day;
+          //返回 false 可以阻止选择框的关闭
+          //return false;
+        });
+      }, false);
+    }
+
+    /**
+     * 获取对象属性的值
+     * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+     * @param {Object} obj 对象
+     * @param {String} param 属性名
+     */
+    var _getParam = function (obj, param) {
+      return obj[param] || '';
+    };
+    //					//级联示例
+    var cityPicker3 = new $.PopPicker({
+      layer: 3
+    });
+    var a = 0;
+    var b = 0;
+    var c = 0;
+    for (var i = 0; i < cityData3.length; i++) {
+      if (cityData3[i].text == member.province) {
+        console.log(cityData3[i].text)
+        console.log(i)
+        a = i;
+      }
+    }
+    for (var j = 0; j < cityData3[a].children.length; j++) {
+      if (cityData3[a].children[j].text == member.city) {
+        console.log(cityData3[a].children[j].text)
+        console.log(j)
+        b = j;
+      }
+    }
+    for (var k = 0; k < cityData3[a].children[b].children.length; k++) {
+
+      if (cityData3[a].children[b].children[k].text == member.district) {
+        console.log(cityData3[a].children[b].children[k].text)
+        console.log(k)
+        c = k;
+      }
+    }
+    console.log(a + "a" + b + "b" + c + "c");
+    console.log(cityData3[a].children[b].children[c].text);
+    cityPicker3.pickers[0].setSelectedIndex(a);
+    cityPicker3.pickers[1].setSelectedIndex(b);
+    cityPicker3.pickers[2].setSelectedIndex(c);
+
+    cityPicker3.setData(cityData3);
+    var showCityPickerButton = document.getElementById('showCityPicker3');
+    // var cityResult3 = document.getElementById('showCityPicker3');
+    showCityPickerButton.addEventListener('tap', function (event) {
+      cityPicker3.show(function (items) {
+        showCityPickerButton.innerText = _getParam(items[0], 'text') + _getParam(items[1], 'text') + _getParam(items[2], 'text');
+        var v1 = _getParam(items[0], 'text');
+        var v2 = _getParam(items[1], 'text');
+        var v3 = _getParam(items[2], 'text');
+        document.getElementById("province").value = v1;
+        document.getElementById("city").value = v2;
+        document.getElementById("district").value = v3;
+        //返回 false 可以阻止选择框的关闭
+        //return false;
+      });
+    }, false);
+  })(mui);
+</script>
+</body>
+</html>

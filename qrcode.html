@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+  <title>GODIVA消费满意度问卷调查</title>
+  <script>
+    ! function () {
+      function a() {
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 6.4 + "px"
+      }
+      var b = null;
+      window.addEventListener("resize", function () {
+        clearTimeout(b), b = setTimeout(a, 10)
+      }, !1), a()
+    }(window);
+  </script>
+  <link rel="stylesheet" th:href="@{${uiPath} +'/godiva-demo/questionnaire_frontend/css/g-base.css'}">
+  <style>
+    body {
+      border: .2rem solid #b88124;
+      background: linear-gradient(to bottom, #0d0301, #0e0604);
+      font-family: 'Microsoft Yahei';
+      box-sizing: border-box;
+    }    
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;      
+      position: relative;
+      font-size: 0;
+    }
+    .img-qrcode-container {
+      flex: 1;
+      overflow: hidden;
+      text-align: center;
+    }
+    .img-qrcode {
+      height: 100%;
+    }
+    .ui-width100 {
+      width: 100%
+    }
+    .p-footer {
+      position: relative;
+      font-size: 0;
+      margin-top: .2rem;
+    }
+    .p-text {
+      position: absolute;
+      font-size: .3rem;
+      text-align: center;
+      width: 100%;
+      color: #000;
+      font-weight: bold;
+      top: .2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img th:src="@{${uiPath}+'/godiva-demo/asset/images/gold_logo.png'}" style="width: 40%;margin-top: .3rem;" />
+    <img th:src="@{${uiPath} +'/godiva-demo/questionnaire_frontend/images/text.png'}" style="width: 51%;margin: .3rem 0;" />
+    <div class="img-qrcode-container">
+      <img class="img-qrcode"
+        th:src="@{${uiPath}+'/scrm/questionnaire/godivaQuestionnaireHistory/loadImg?historyId='+${historyId}}" />
+    </div>
+    <div class="p-footer ui-width100">
+      <p class="p-text">感谢完成此问卷，<br>长按识别二维码， 领取惊喜礼券。</p>
+      <img class="ui-width100" th:src="@{${uiPath} +'/godiva-demo/questionnaire_frontend/images/qrcode_bottom_wave.png'}" />
+      <img class="ui-width100" th:src="@{${uiPath} +'/godiva-demo/questionnaire_frontend/images/qrcode_bottom_bg.jpg'}" />
+    </div>
+  </div>
+</body>
+
+</html>

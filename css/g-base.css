@@ -1,0 +1,53 @@
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot?v=4.7.0');
+    src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+         url('../fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), 
+         url('../fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), 
+         url('../fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), 
+         url('../fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'AlibabaFont';
+    src: url('../fonts/iconfont.eot');
+    src: url('../fonts/iconfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+         url('../fonts/iconfont.woff2') format('woff2'), 
+         url('../fonts/iconfont.woff') format('woff'), 
+         url('../fonts/iconfont.ttf') format('truetype'), 
+         url('../fonts/iconfont.svg#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+.iconfont {
+	/* font-family:"FontAwesome" !important; */
+	font-family:"AlibabaFont" !important;
+	font-size:16px;
+	font-style:normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* reset declare */ 
+body,h1,h2,h3,h4,h5,h6,hr,p,ul,ol,li,dl,dt,dd,table,td,th,caption,form,button,input,select,textarea,fieldset,legend,blockquote,iframe,address{margin:0;padding:0;outline:none;}
+html{_background:url(about:blank);}
+html,body{height:100%}
+body{font:12px/1.5 '宋体';color:#444;/*background:#e8e8e8;*/}
+img,fieldset{border:0;}
+iframe{display:block;}
+ol,ul,li{list-style:none;}
+em,i,dfn,cite,address{font-style:normal;}
+hr{height:0;overflow:hidden;border:0;}
+h1,h2,h3,h4,h5,h6,font{font-size:100%;}
+q:after,q:before{content:'';}
+table{border-collapse:collapse;border-spacing:0;}
+input[type=radio],
+input[type=checkbox]{vertical-align:middle;}
+select{height:23px;line-height:23px;padding:3px;vertical-align:middle;}
+a{color:#444;text-decoration:none;}
+a:hover{color:#f60;}
+a,button{cursor:pointer;}
+input,button,textarea,select{font-family:inherit;font-size:100%;}
+textarea{resize:none;}
+legend{*margin:0 -7px;}

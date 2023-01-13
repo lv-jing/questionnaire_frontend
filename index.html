@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<!-- <html lang="en" > -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GODIVA消费满意度问卷调查</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <script>
+        !function () {
+            function a() {
+                document.documentElement.style.fontSize = document.documentElement.clientWidth / 6.4 + "px"
+            }
+
+            var b = null;
+            window.addEventListener("resize", function () {
+                clearTimeout(b), b = setTimeout(a, 10)
+            }, !1), a()
+        }(window);
+    </script>
+    <link rel="stylesheet" th:href="@{${uiPath} +'/godiva-demo/questionnaire_frontend/css/g-base.css'}">
+    <link rel="stylesheet" th:href="@{${uiPath} +'/godiva-demo/questionnaire_frontend/css/c-index.css?v=2020032203'}">
+</head>
+
+<body>
+<div class="page" id="app" v-cloak>
+    <img class="logo" :src="apiBase + '/godiva-demo/questionnaire_frontend/images/logo_chocolate.png'" alt="">
+    <p class="ui-title" style="margin: .5rem 0 -.1rem 0;">请对本次购物体验评分:</p>
+    <ul class="star-wrap" @click="grade">
+        <li class="iconfont" v-for="(item, index) in lists" :data-index="index"
+            :class="{active: index <= selectedInfo.starIndex}">
+        </li>
+    </ul>
+    <div v-if="selectedInfo.starIndex > 2">
+        <p class="ui-title">{{details.questions}}</p>
+        <div class="checkbox-wrap">
+        <span>
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags1" name="" >
+          <span>{{details.tags1}}</span>
+        </span>
+            <span>
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags2" name="" >
+          <span>{{details.tags2}}</span>
+        </span>
+            <span v-if="details.tags3">
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags3" name="" >
+          <span>{{details.tags3}}</span>
+        </span>
+            <span v-if="details.tags4">
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags4" name="" >
+          <span>{{details.tags4}}</span>
+        </span>
+            <span v-if="details.tags5">
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags5" name="" >
+          <span>{{details.tags5}}</span>
+        </span>
+            <span>
+          <input type="checkbox" v-model="selectedInfo.tags" value="tags6" name="" >
+          <span>其他</span>
+          <input class="ui-input-other" type="text" v-model="selectedInfo.otherMessage" v-if="showOtherMessage">
+        </span>
+        </div>
+    </div>
+    <div v-else>
+        <p class="ui-title">{{details.questionf}}</p>
+        <div class="checkbox-wrap">
+        <span>
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf1" name="" >
+          <span>{{details.tagf1}}</span>
+        </span>
+            <span>
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf2" name="" >
+          <span>{{details.tagf2}}</span>
+        </span>
+            <span v-if="details.tagf3">
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf3" name="" >
+          <span>{{details.tagf3}}</span>
+        </span>
+            <span v-if="details.tagf4">
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf4" name="" >
+          <span>{{details.tagf4}}</span>
+        </span>
+            <span v-if="details.tagf5">
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf5" name="" >
+          <span>{{details.tagf5}}</span>
+        </span>
+            <span>
+          <input type="checkbox" v-model="selectedInfo.tagf" value="tagf6" name="" >
+          <span>其他</span>
+          <input class="ui-input-other" type="text" v-model="selectedInfo.otherMessage" v-if="showOtherMessage">
+        </span>
+        </div>
+    </div>
+    <div>
+        <p class="ui-title">{{details.questionThird}}</p>
+        <div class="checkbox-wrap">
+        <span>
+          <input type="radio" v-model="selectedInfo.taga" value="tagth1" name="" >
+          <span>{{details.tagth1}}</span>
+        </span>
+            <span>
+          <input type="radio" v-model="selectedInfo.taga" value="tagth2" name="" >
+          <span>{{details.tagth2}}</span>
+        </span>
+            <span v-if="details.tagf3">
+          <input type="radio" v-model="selectedInfo.taga" value="tagth3" name="" >
+          <span>{{details.tagth3}}</span>
+        </span>
+        </div>
+    </div>
+    <div v-if="selectedInfo.taga !== 'tagth2'">
+        <p class="ui-title">{{details.questionFourth}}</p>
+        <div class="checkbox-wrap">
+        <span>
+          <input type="radio" v-model="selectedInfo.tagb" value="tagfour1" name="" >
+          <span>{{details.tagfour1}}</span>
+        </span>
+            <span>
+          <input type="radio" v-model="selectedInfo.tagb" value="tagfour2" name="" >
+          <span>{{details.tagfour2}}</span>
+        </span>
+            <span>
+          <input type="radio" v-model="selectedInfo.tagb" value="tagfour3" name="" >
+          <span>{{details.tagfour3}}</span>
+        </span>
+        <span>
+            <input type="radio" v-model="selectedInfo.tagb" value="tagfour4" name="" >
+            <span>{{details.tagfour4}}</span>
+          </span>
+          <span>
+            <input type="radio" v-model="selectedInfo.tagb" value="tagfour5" name="" >
+            <span>{{details.tagfour5}}</span>
+          </span>
+        </div>
+    </div>
+    <!-- <div>
+        <p class="ui-title">{{details.questionFifth}}</p>
+        <div class="checkbox-wrap">
+        <span>
+          <input type="radio" v-model="selectedInfo.tagc" value="tagfifth1" name="" >
+          <span>{{details.tagfifth1}}</span>
+        </span>
+            <span>
+          <input type="radio" v-model="selectedInfo.tagc" value="tagfifth2" name="" >
+          <span>{{details.tagfifth2}}</span>
+        </span>
+            <span>
+          <input type="radio" v-model="selectedInfo.tagc" value="tagfifth3" name="" >
+          <span>{{details.tagfifth3}}</span>
+        </span>
+        </div>
+    </div> -->
+    <template v-if="">
+        <p class="ui-title">{{details.guestMessage}}</p>
+        <textarea class="input-evaluate" v-model="selectedInfo.guestMessage" cols="30" rows="5"
+                  placeholder="请留言给我们吧(请选填)"
+                  @blur="scollFun">
+          </textarea>
+    </template>
+    <button class="btn-submit" @click="toSubmit">确定提交</button>
+
+    <div class="ui-mask" :class="{'toastShow': showToast}"></div>
+    <div class="ui-toast" :class="{'toastShow': showToast}" v-html="toastMsg"></div>
+
+    <div class="ui-mask-translusent" v-if="loading || showModal"></div>
+    <div class="ui-modal-dia-tip ui-modal-dialog" v-if="showModal">
+
+        <p class="mt-header-02"></p>
+        <div class="mt-main">
+            <image :src="apiBase +'/godiva-demo/questionnaire_frontend/images/logo_chocolate.png'"></image>
+            <p class="text-01">提示</p>
+            <p class="text-02" v-html="modalTipText"></p>
+            <button class="btn-sure" @click="closeTip">好的</button>
+        </div>
+    </div>
+    <div class="loading" v-if="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    var globalTags = /*[[${tags}]]*/
+    var globalDetails = /*[[${details}]]*/
+    var uiPath = /*[[${uiPath}]]*/
+</script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            apiBase: '',
+            loading: false,
+            showOtherMessage: false,
+            showModal: false,
+            historyId: '',
+            modalTipText: '',
+            selectedInfo: {
+                starIndex: -1,
+                // tags: [],
+                guestMessage: '',
+                tagf: [],
+                tags: [],
+                taga: "",
+                tagb: "",
+                tagc: "",
+                otherMessage: ''
+            },
+            lists: [0, 1, 2, 3, 4],
+            tags: Array(5)
+                .fill(null)
+                .map(
+                    (m, i) =>
+                        new Object({
+                            tagLevel: i + 1,
+                            labels: Array(3)
+                                .fill(null)
+                                .map(
+                                    (m, i) => new Object({tagContent: "", tagOrder: i + 1, id: ''})
+                                )
+                        })
+                ),
+            showToast: false,
+            toastMsg: '',
+            details: null
+        },
+        created: function () {
+            this.details = window.globalDetails;
+            this.handleTagsData(window.globalTags || []);
+            this.historyId = this.getQueryVariable('historyId') || '';
+            this.apiBase = window.uiPath;
+            try {
+                console.log('id', window.location.href.match(/questionnaireIndex\/(\S*)\/?/)[1])
+            } catch (e) {
+            }
+        },
+        watch: {
+            selectedInfo: {
+                handler(val) {
+                    if (val.tagf.includes('tagf6') || val.tags.includes('tags6')) {
+                        this.showOtherMessage = true;
+                    } else {
+                        this.showOtherMessage = false;
+                        this.selectedInfo.otherMessage = '';
+                    }
+                },
+                deep: true
+            }
+        },
+        methods: {
+            handleTagsData: function (tags) {
+                var pageTags = this.tags;
+                tags.forEach(tag => {
+                    var targetTag = pageTags.find(t => t.tagLevel == tag.tagLevel);
+                    if (targetTag) {
+                        var targetLabel = targetTag.labels.find(
+                            l => l.tagOrder == tag.tagOrder
+                        );
+                        if (targetLabel) {
+                            targetLabel.tagContent = tag.tagContent;
+                            targetLabel.id = tag.id.toString();
+                        }
+                    }
+                });
+            },
+            grade: function (e) {
+                if (e.target.nodeName.toLowerCase() === 'li') {
+                    var i = parseInt(e.target.dataset.index),
+                        starIndex = this.selectedInfo.starIndex;
+                    if (starIndex == i) {
+                        return
+                    }
+                    this.selectedInfo.tags = [];
+                    this.selectedInfo.tagf = [];
+                    this.selectedInfo.starIndex = i;
+                    console.log(this.selectedInfo)
+                }
+            },
+            chooseTag: function (e) {
+                if (e.target.nodeName.toLowerCase() === 'li' || e.target.nodeName.toLowerCase() === 'span') {
+                    var i = parseInt(e.target.dataset.index),
+                        tmpTags = this.selectedInfo.tags,
+                        index = tmpTags.indexOf(i);
+                    if (index > -1) {
+                        tmpTags.splice(index, 1);
+                    } else {
+                        tmpTags.push(i)
+                    }
+                    console.log(this.selectedInfo)
+                }
+            },
+            closeTip: function () {
+                this.showModal = false;
+            },
+            scollFun: function () {
+                window.scroll(0, 0);
+            },
+            getQueryVariable: function (variable) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i = 0; i < vars.length; i++) {
+                    var pair = vars[i].split("=");
+                    if (pair[0] == variable) {
+                        return pair[1];
+                    }
+                }
+                return (false);
+            },
+            toSubmit: function () {
+                var that = this,
+                    selectedInfo = this.selectedInfo,
+                    starIndex = selectedInfo.starIndex;
+                console.log(selectedInfo)
+                if (starIndex < 0) {
+                    var that = this;
+                    that.showToast = true;
+                    that.toastMsg = '请给本次服务评分！';
+                    setTimeout(function () {
+                        that.showToast = false;
+                    }, 2000);
+                    return;
+                }
+                // if (this.details.isRequired == 1 && !selectedInfo.tags.length) {
+                //   this.showModal = true;
+                //   this.modalTipText = '请填写标签后，再次提交，<br>谢谢！';
+                //   return;
+                // }
+
+                if ((starIndex > 2 && !selectedInfo.tags.length)
+                    || (starIndex <= 2 && !selectedInfo.tagf.length)
+                    || !selectedInfo.taga
+                    || (selectedInfo.taga && selectedInfo.taga !== 'tagth2' && !selectedInfo.tagb)
+                ) {
+                    this.showModal = true;
+                    this.modalTipText = '请选择答案后提交，<br>谢谢！';
+                    return;
+                }
+                if (this.details.isRequired == 1 && !selectedInfo.guestMessage) {
+                    this.showModal = true;
+                    this.modalTipText = '请填写反馈意见后，再次提交，<br>谢谢！';
+                    return;
+                }
+
+                that.loading = true;
+                var tagsIdArray = [];
+                for (var t of this.selectedInfo.tags) {
+                    var targetLabel = this.tags[starIndex].labels.find(l => l.tagOrder == parseInt(t) + 1);
+                    if (targetLabel) {
+                        tagsIdArray.push(targetLabel.id);
+                    }
+                }
+                let arr = starIndex > 2 ? selectedInfo.tags : selectedInfo.tagf
+                arr.push(selectedInfo.taga, selectedInfo.tagb)
+                if (selectedInfo.tagc) {
+                    arr.push(selectedInfo.tagc)
+                }
+                var params = {
+                    "historyId": that.historyId,
+                    "score": (starIndex + 1).toString(),
+                    "tagsid": tagsIdArray,
+                    "selectTag": arr.join(','),
+                    "guestMessage": selectedInfo.guestMessage,
+                    "otherMessage": selectedInfo.otherMessage
+                }
+                axios.post((that.apiBase + 'scrm/questionnaire/godivaQuestionnaireHistory/submitQuestionnaire'), params)
+                    .then(function (res) {
+                        if (res.data && res.data.code == 1) {
+                            axios.post((that.apiBase + 'scrm/questionnaire/godivaQuestionnaireHistory/grantQuestionnaireCoupon'), {historyId: that.historyId})
+                                .then(function (couponRes) {
+                                    that.loading = false;
+                                    if (couponRes.data && couponRes.data.data) {
+                                        that.showToast = true;
+                                        that.toastMsg = '感谢配合！<br>恭喜您获得满减10元券！';
+                                        setTimeout(function () {
+                                            that.showToast = false;
+                                            window.location.href = that.apiBase + '/scrm/questionnaire/godivaCoupon/toCouponPage?miniprogram=true&phone=' + couponRes.data.data; // 跳转我的卡券页
+                                        }, 2000);
+                                    } else {
+                                        that.showModal = true;
+                                        that.modalTipText = couponRes.data && couponRes.data.msg ? couponRes.data.msg : '系统错误，<br>请稍后重试。';
+                                    }
+                                })
+                        } else {
+                            that.loading = false;
+                            that.showModal = true;
+                            that.modalTipText = res.data && res.data.msg ? res.data.msg : '系统错误，<br>请稍后重试。';
+                        }
+                    })
+            },
+
+        }
+    })
+</script>
+</body>
+
+</html>

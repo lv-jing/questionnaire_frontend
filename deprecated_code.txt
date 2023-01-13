@@ -1,0 +1,29 @@
+  onLoad: function (options) {
+    // this.initPicker();
+    // return;
+    let result = [];
+    const originData = storeMockData.data.data;
+    extractor(originData.slice(1), 0)
+    function extractor(collection, deepth = 0) {
+      collection.forEach((item, index) => {
+        const data = item;
+        console.log(deepth, 'depth', item, 'item', roundIndex, 'roundIndex');
+        if (!result[deepth]) {
+          result[deepth] = [];
+        }
+        result[deepth].push(item)
+        // result.set(deepth, result.get(deepth))
+        if (data.elementList && data.elementList.length) {
+          // result.push()
+          extractor(data.elementList, deepth + 1)
+        }
+        if (deepth === 0) {
+          roundIndex++;
+        }
+      })
+    }
+    console.log(result, 'result');
+    // this.setData({
+    //   storeCollection: result
+    // })
+  },

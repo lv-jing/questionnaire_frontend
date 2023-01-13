@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>GODIVA消费满意度问卷调查</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+  <script>
+    ! function () {
+      function a() {
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 6.4 + "px"
+      }
+      var b = null;
+      window.addEventListener("resize", function () {
+        clearTimeout(b), b = setTimeout(a, 10)
+      }, !1), a()
+    }(window);
+  </script>
+  <link rel="stylesheet" th:href="@{${uiPath} +'/godiva-demo/questionnaire_frontend/css/g-base.css'}">
+  <link rel="stylesheet" th:href="@{${uiPath} +'/godiva-demo/questionnaire_frontend/css/c-index.css?v=2020021701'}">
+</head>
+
+<body>
+  <div class="ui-mask-translusent"></div>
+  <div class="ui-modal-dia-tip ui-modal-dialog">
+    <p class="mt-header-01"></p>
+    <p class="mt-header-02"></p>
+    <div class="mt-main">
+      <image th:src="@{${uiPath} +'/godiva-demo/questionnaire_frontend/images/logo_chocolate.png'}"></image>
+      <p class="text-01">提示</p>
+      <p class="text-02" id="J_modalTipText"></p>
+      <button class="btn-sure" id="J_btn_sure">好的</button>
+    </div>
+  </div>
+
+  <script type="text/jscript" th:inline="javascript">
+    var uiPath = /*[[${uiPath}]]*/
+    var code = /*[[${code}]]*/
+    var message = /*[[${message}]]*/
+    var phone = /*[[${phone}]]*/
+    
+    var tip = '';
+    if (code == 1) {
+      tip = '优惠券已发放，正在跳转到【我的卡券】页，请稍后...'
+      window.location.href = uiPath + "/mobile/web/member/coupon?miniprogram=true&phone=" + phone;
+    } else {
+      tip = message || '优惠券发放失败，请稍后重试。'
+      
+    }
+    document.querySelector('#J_modalTipText').innerHTML = tip;
+
+    document.querySelector('#J_btn_sure').onclick = function () {
+      if (code != 1) {
+        window.history.go(-1)
+      }
+    }
+</script>
+</body>
+
+</html>
